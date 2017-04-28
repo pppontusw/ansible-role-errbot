@@ -1,0 +1,10 @@
+[program:errbot]
+command = {{errbot_path}}/env/bin/errbot --config {{errbot_path}}/config.py
+user = {{errbot_user}}
+stdout_logfile = /var/log/errbot/errbot.log
+stderr_logfile = NONE
+redirect_stderr = true
+directory = {{errbot_path}}
+startsecs = 3
+stopsignal = INT
+environment = LC_ALL="en_US.UTF-8"

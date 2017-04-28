@@ -1,0 +1,5 @@
+---
+# defaults file for ansible-role-errbot/
+errbot_user: errbot
+
+errbot_path: /opt/errbot

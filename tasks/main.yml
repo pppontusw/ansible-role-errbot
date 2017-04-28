@@ -1,0 +1,69 @@
+---
+# tasks file for ansible-role-errbot/
+- apt:
+    name: '{{item}}'
+    state: present
+  with_items:
+    - python
+    - python3-pip
+    - python-virtualenv
+    - python3-dev 
+    - libssl-dev
+    - libffi-dev
+    - supervisord
+  become: yes
+
+- name: create {{errbot_user}} group
+  group: 
+    name: "{{errbot_user}}" 
+    state: present
+  become: yes
+
+- name: create {{errbot_user}} user
+  user: 
+    name: "{{errbot_user}}" 
+    groups: "{{errbot_user}}" 
+    state: present
+  become: yes
+
+- file:
+    path: "{{item}}"
+    state: directory
+    owner: "{{errbot_user}}"
+    group: "{{errbot_user}}"
+  with_items:
+    - "{{errbot_path}}"
+    - /var/log/errbot
+  become: yes
+
+- pip:
+    name: "{{item}}"
+    virtualenv: "{{errbot_path}}/env"
+    virtualenv_python: python3
+  become: yes
+  become_user: "{{errbot_user}}"
+  with_items:
+    - setuptools
+
+- pip:
+    name: "{{item}}"
+    virtualenv: "{{errbot_path}}/env"
+    virtualenv_python: python3
+  become: yes
+  become_user: "{{errbot_user}}"
+  with_items:
+    - errbot
+    - python-telegram-bot
+
+- stat:
+    path: "{{errbot_path}}/config.py"
+
+- shell: cd {{errbot_path}} && errbot --init
+  become: yes
+  become_user: "{{errbot_user}}"
+  when: not st.stat.exists
+
+- template:
+    src: supervisor.j2
+    dest: /etc/supervisor/conf.d/errbot.conf
+  become: yes
