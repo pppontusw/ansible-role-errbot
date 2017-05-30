@@ -7,7 +7,7 @@
     - "{{errbot_python_executable_name}}"
     - "{{errbot_python_executable_name}}-pip"
     - python-virtualenv
-    - "{{errbot_python_executable_name}}-dev "
+    - "{{errbot_python_executable_name}}-dev"
     - libssl-dev
     - libffi-dev
     - supervisor
