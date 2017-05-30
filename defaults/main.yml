@@ -3,3 +3,8 @@
 errbot_user: errbot
 
 errbot_path: /opt/errbot
+
+bot_pip_packages:
+  - python-telegram-bot
+
+python_executable_name: python3 #or python

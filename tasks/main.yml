@@ -4,10 +4,10 @@
     name: '{{item}}'
     state: present
   with_items:
-    - python
-    - python3-pip
+    - "{{python_executable_name}}"
+    - "{{python_executable_name}}-pip"
     - python-virtualenv
-    - python3-dev 
+    - "{{python_executable_name}}-dev "
     - libssl-dev
     - libffi-dev
     - supervisor
@@ -39,7 +39,7 @@
 - pip:
     name: "{{item}}"
     virtualenv: "{{errbot_path}}/env"
-    virtualenv_python: python3
+    virtualenv_python: "{{python_executable_name}}"
   become: yes
   become_user: "{{errbot_user}}"
   with_items:
@@ -48,12 +48,20 @@
 - pip:
     name: "{{item}}"
     virtualenv: "{{errbot_path}}/env"
-    virtualenv_python: python3
+    virtualenv_python: "{{python_executable_name}}"
   become: yes
   become_user: "{{errbot_user}}"
   with_items:
     - errbot
     - python-telegram-bot
+
+- pip:
+    name: "{{item}}"
+    virtualenv: "{{errbot_path}}/env"
+    virtualenv_python: "{{python_executable_name}}"
+  become: yes
+  become_user: "{{errbot_user}}"
+  with_items: "{{bot_pip_packages}}"
 
 - stat:
     path: "{{errbot_path}}/config.py"
