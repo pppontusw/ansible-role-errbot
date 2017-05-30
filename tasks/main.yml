@@ -67,7 +67,7 @@
     path: "{{errbot_path}}/config.py"
   register: st
 
-- shell: "{{errbot_path}}/env/bin/errbot --init"
+- shell: "cd {{errbot_path}} && {{errbot_path}}/env/bin/errbot --init"
   become: yes
   become_user: "{{errbot_user}}"
   when: not st.stat.exists
