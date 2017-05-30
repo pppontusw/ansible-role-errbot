@@ -76,3 +76,9 @@
     src: supervisor.j2
     dest: /etc/supervisor/conf.d/errbot.conf
   become: yes
+
+- name: start supervisor
+  service: 
+    name: supervisor
+    state: started
+  become: yes
