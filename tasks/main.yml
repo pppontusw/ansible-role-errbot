@@ -4,10 +4,11 @@
     name: '{{item}}'
     state: present
   with_items:
-    - "{{python_executable_name}}"
-    - "{{python_executable_name}}-pip"
+    - python
+    - python3
+    - python3-pip
     - python-virtualenv
-    - "{{python_executable_name}}-dev "
+    - python3-dev
     - libssl-dev
     - libffi-dev
     - supervisor
@@ -39,7 +40,7 @@
 - pip:
     name: "{{item}}"
     virtualenv: "{{errbot_path}}/env"
-    virtualenv_python: "{{python_executable_name}}"
+    virtualenv_python: python3
   become: yes
   become_user: "{{errbot_user}}"
   with_items:
@@ -48,26 +49,25 @@
 - pip:
     name: "{{item}}"
     virtualenv: "{{errbot_path}}/env"
-    virtualenv_python: "{{python_executable_name}}"
+    virtualenv_python: python3
   become: yes
   become_user: "{{errbot_user}}"
   with_items:
     - errbot
-    - python-telegram-bot
 
 - pip:
     name: "{{item}}"
     virtualenv: "{{errbot_path}}/env"
-    virtualenv_python: "{{python_executable_name}}"
+    virtualenv_python: python3
   become: yes
   become_user: "{{errbot_user}}"
-  with_items: "{{bot_pip_packages}}"
+  with_items: "{{errbot_pip_packages}}"
 
 - stat:
     path: "{{errbot_path}}/config.py"
   register: st
 
-- shell: "cd {{errbot_path}} && errbot --init"
+- shell: "cd {{errbot_path}} && {{errbot_path}}/env/bin/errbot --init"
   become: yes
   become_user: "{{errbot_user}}"
   when: not st.stat.exists
@@ -75,4 +75,10 @@
 - template:
     src: supervisor.j2
     dest: /etc/supervisor/conf.d/errbot.conf
+  become: yes
+
+- name: start supervisor
+  service: 
+    name: supervisor
+    state: started
   become: yes
